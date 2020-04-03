@@ -3,23 +3,29 @@ using UnityEngine;
 
 namespace Gameplay.AI
 {
-    public class AISimple : ScriptableObject, IAILogic
+
+    public class RandomAiChooseLogic
     {
-        public CellPosition GetCellAiChoseBasedOnBoard(Cell[,] board)
+        private readonly Cell[,] m_Board;
+
+        public RandomAiChooseLogic(Cell[,] board)
         {
-            CellPosition cellChosen = ChooseACellInRandom(GetAllFreeCells(board));
-            return cellChosen;
+            m_Board = board;
         }
 
-        //TODO(JohnMir): Maybe move this to the triliza class?
-        private List<CellPosition> GetAllFreeCells(Cell[,] board)
+        public CellPosition ChooseRandomCell()
+        {
+            return ChooseACellInRandom(GetAllFreeCells());
+        }
+
+        private List<CellPosition> GetAllFreeCells()
         {
             List<CellPosition> allFreeCells = new List<CellPosition>();
-            for (int i = 0; i < board.GetLength(0); i++)
+            for (int i = 0; i < m_Board.GetLength(0); i++)
             {
-                for (int j = 0; j < board.GetLength(1); j++)
+                for (int j = 0; j < m_Board.GetLength(1); j++)
                 {
-                    if (board[i, j].CellData == CellStatus.UNOCCUPIED)
+                    if (m_Board[i, j].CellData == CellStatus.UNOCCUPIED)
                     {
                         CellPosition currentIteratingCellPos = new CellPosition { x = i, y = j };
                         allFreeCells.Add(currentIteratingCellPos);
@@ -33,6 +39,18 @@ namespace Gameplay.AI
         {
             int randomIndex = Random.Range(0, allNonOccupiedCellPositions.Count);
             return allNonOccupiedCellPositions[randomIndex];
+        }
+    }
+
+    [CreateAssetMenu(fileName = "SimpleAi", menuName = "AI/Simple", order = 0)]
+    public class AISimple : ScriptableObject, IAILogic
+    {
+        public RandomAiChooseLogic simpleRandomChooseLogic;
+
+        public CellPosition GetCellAiChoseBasedOnBoard(Cell[,] board)
+        {
+            simpleRandomChooseLogic = new RandomAiChooseLogic(board);
+            return simpleRandomChooseLogic.ChooseRandomCell();
         }
     }
 }

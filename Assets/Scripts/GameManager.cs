@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Core.StateMachine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,19 +10,16 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if (mInstance == null)
-            {
-                GameObject go = new GameObject();
-                mInstance = go.AddComponent<GameManager>();
-            }
             return mInstance;
         }
     }
     #endregion
 
+    public TextMeshProUGUI InfoText;
     public State CurrentState;
     private void Awake()
     {
+        mInstance = this;
         SwitchToState(new MenuState());
     }
 

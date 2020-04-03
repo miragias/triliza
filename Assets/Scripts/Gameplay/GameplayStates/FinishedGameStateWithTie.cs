@@ -1,22 +1,21 @@
 ﻿namespace Gameplay.GameplayStates
 {
-    public class PlayerChooseState : GameplayState
+    public class FinishedGameStateWithTie : GameplayState
     {
         private readonly Triliza m_Triliza;
-
-        public PlayerChooseState(Triliza triliza)
+        public FinishedGameStateWithTie(Triliza triliza)
         {
             m_Triliza = triliza;
         }
 
         public override void OnEnterState()
         {
-            m_Triliza.SwitchInteractOn();
+            m_Triliza.SwitchInteractOff();
+            GameManager.Instance.InfoText.text = "TIE";
         }
 
         public override void OnLeaveState()
         {
-            m_Triliza.SwitchInteractOff();
         }
 
         public override void Update()

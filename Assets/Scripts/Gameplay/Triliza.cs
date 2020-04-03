@@ -2,6 +2,7 @@
 using Gameplay.Systems.Interact;
 using Gameplay.GameplayStates;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Gameplay
 {
@@ -31,8 +32,8 @@ namespace Gameplay
         //For PVP
         public Triliza()
         {
+            Debug.Log(GameManager.Instance);
             m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[]{PlayerType.ENEMY , PlayerType.PLAYER});
-            UnityEngine.Debug.Log("<color=blue>CREATE NEW GAME PVP"+ "</color>");
             m_AiLogic = null;
             SetupRestOfStuff();
         }
@@ -40,8 +41,8 @@ namespace Gameplay
         //For VS COM
         public Triliza(IAILogic logic)
         {
+            Debug.Log(GameManager.Instance);
             m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[] { PlayerType.ENEMY, PlayerType.PLAYER });
-            UnityEngine.Debug.Log("<color=blue>CREATE NEW GAME PVE"+ "</color>");
             m_AiLogic = logic;
             SetupRestOfStuff();
         }
@@ -50,9 +51,7 @@ namespace Gameplay
         {
             CreateCellViewsArray();
             ResetAllCelViews();
-            m_InteractSystem = Resources.Load<InteractSystem>("InteractSystem");
-            m_InteractSystem.SetupSystem(Camera.main);
-            m_NoInteractSystem = Resources.Load<NoInteractSystem>("NoInteractSystem");
+            SetupInteractSystems();
             SwitchInteractOn();
             ChooseRandomStartingPlayer();
             SetStartingGameplayState();
@@ -88,6 +87,13 @@ namespace Gameplay
             }
         }
 
+        private void SetupInteractSystems()
+        {
+            m_InteractSystem = Resources.Load<InteractSystem>("InteractSystem");
+            m_InteractSystem.SetupSystem(Camera.main);
+            m_NoInteractSystem = Resources.Load<NoInteractSystem>("NoInteractSystem");
+        }
+
         private void ChooseRandomStartingPlayer()
         {
             m_CurrentPlayer = (PlayerType)Random.Range(0, 2);
@@ -121,7 +127,7 @@ namespace Gameplay
             m_CurrentInteractSystem = m_NoInteractSystem;
         }
 
-        public void InteractWithCell(CellPosition cellPosition)
+        public void InteractWithCell(CellPosition cellPosition, bool playerSelecting = true)
         {
             int x = cellPosition.x;
             int y = cellPosition.y;
@@ -139,15 +145,48 @@ namespace Gameplay
                     m_BoardCells[x, y].CellSelectedByPlayer(PlayerType.ENEMY);
                 }
                 bool playerWon = m_CheckWinLogic.CheckPlayerWon(m_CurrentPlayer , cellPosition);
-                GoToNextStateAfterInteract();
+                if(playerWon)
+                {
+                    SwitchToGameplayState(new FinishedGameStateWithWinner(m_AiLogic == null, m_CurrentPlayer , this));
+                    return;
+                }
+                bool checkTie = CheckTie();
+                if (checkTie)
+                {
+                    SwitchToGameplayState(new FinishedGameStateWithTie(this));
+                    return;
+                }
+                SwitchPlayer();
+                if(playerSelecting)
+                {
+                    GoToNextStateAfterInteract();
+                }
             }
         }
+        private bool CheckTie()
+        {
+            for (int i = 0; i < m_BoardCells.GetLength(0); i++)
+            {
+                for (int j = 0; j < m_BoardCells.GetLength(1); j++)
+                {
+                    if(m_BoardCells[i,j].CellData == CellStatus.UNOCCUPIED)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
-        private void GoToNextStateAfterInteract()
+        private void SwitchPlayer()
         {
             int currentPlayer = (int)m_CurrentPlayer;
             currentPlayer++;
             m_CurrentPlayer = (PlayerType)((currentPlayer) % 2);
+        }
+
+        private void GoToNextStateAfterInteract()
+        {
             if(m_AiLogic == null)
             {
                 SwitchToGameplayState(new PlayerChooseState(this));
@@ -175,7 +214,8 @@ namespace Gameplay
 
         public void PickAiMove()
         {
-            m_AiLogic.GetCellAiChoseBasedOnBoard(this.m_BoardCells);
+            CellPosition cellPositionChosen = m_AiLogic.GetCellAiChoseBasedOnBoard(this.m_BoardCells);
+            InteractWithCell(cellPositionChosen , false);
         }
     }
 }

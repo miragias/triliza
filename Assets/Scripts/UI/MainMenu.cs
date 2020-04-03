@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using Gameplay;
 using Core.StateMachine;
+using Gameplay.AI;
 
 namespace UI.Menus
 {
@@ -14,7 +15,7 @@ namespace UI.Menus
         private void Awake()
         {
             VsPlayerButton.SetMethod(CreatePlayerVsPlayerGame);
-            VsEasyButton.SetMethod(CreatePlayerVsPlayerGame);
+            VsEasyButton.SetMethod(CreatePlayerVsEasyGame);
             VsHardButton.SetMethod(CreatePlayerVsHardGame);
         }
 
@@ -27,7 +28,8 @@ namespace UI.Menus
 
         private void CreatePlayerVsEasyGame()
         {
-            Triliza triliza = new Triliza();
+            AISimple simpleAi = Resources.Load<AISimple>("SimpleAi");            
+            Triliza triliza = new Triliza(simpleAi);
             GameManager.Instance.SwitchToState(new InGameState(triliza));
             DisableUIButtons();
         }
