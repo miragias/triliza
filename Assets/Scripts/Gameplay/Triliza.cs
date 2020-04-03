@@ -52,6 +52,7 @@ namespace Gameplay
             m_NoInteractSystem = Resources.Load<NoInteractSystem>("NoInteractSystem");
             SwitchInteractOn();
             ChooseRandomStartingPlayer();
+            SetStartingGameplayState();
         }
 
         private void CreateCellViewsArray()
@@ -124,16 +125,36 @@ namespace Gameplay
 
             if (m_BoardCells[x, y].CellData == Cell.CellStatus.UNOCCUPIED)
             {
+                UnityEngine.Debug.Log("<color=blue>"+m_CurrentPlayer+ "</color>");
                 if (m_CurrentPlayer == Player.PLAYER)
                 {
                     m_BoardCells[x, y].CellData = Cell.CellStatus.PLAYER;
+                    m_BoardCells[x, y].CellSelectedByPlayer(Player.PLAYER);
                 }
                 else 
                 {
                     m_BoardCells[x, y].CellData = Cell.CellStatus.ENEMY;
+                    m_BoardCells[x, y].CellSelectedByPlayer(Player.ENEMY);
                 }
+                GoToNextStateAfterInteract();
             }
         }
+
+        private void GoToNextStateAfterInteract()
+        {
+            int currentPlayer = (int)m_CurrentPlayer;
+            currentPlayer++;
+            m_CurrentPlayer = (Player)((currentPlayer) % 2);
+            if(m_AiLogic == null)
+            {
+                SwitchToGameplayState(new PlayerChooseState(this));
+            }
+            else
+            {
+                SwitchToGameplayState(new AiChooseState(this));
+            }
+        }
+
         public void Tick()
         {
             m_CurrentInteractSystem.Tick();

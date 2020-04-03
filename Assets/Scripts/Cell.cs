@@ -31,20 +31,16 @@ public class Cell : MonoBehaviour, IInteractable
         m_Triliza.InteractWithCell(m_CellPosition);
     }
 
-    public void SetStatusOfCell(CellStatus cellStatus , Triliza.Player player)
-    {
-        CellData = cellStatus;
-        SetImageBasedOnSpellStatus(player);
-    }
-
-    private void SetImageBasedOnSpellStatus(Triliza.Player player)
+    public void CellSelectedByPlayer(Triliza.Player player)
     {
         switch(player)
         {
             case (Triliza.Player.PLAYER):
+                CellData = CellStatus.PLAYER;
                 m_SpriteOnCellView.sprite = m_CellSpriteData.PlayerIconSprite;
                 break;
             case (Triliza.Player.ENEMY):
+                CellData = CellStatus.ENEMY;
                 m_SpriteOnCellView.sprite = m_CellSpriteData.EnemyIconSprite;
                 break;
         }
