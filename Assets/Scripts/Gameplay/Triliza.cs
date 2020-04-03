@@ -10,12 +10,14 @@ namespace Gameplay
         public int x;
         public int y;
     }
+    public enum PlayerType { PLAYER, ENEMY };
 
     public class Triliza
     {
         private const int NUMBER_OF_CELLS_PER_LINE = 3;
         private const int NUMBER_OF_CELLS_PER_ROW = 3;
         private readonly IAILogic m_AiLogic;
+        private readonly CheckWinLogic m_CheckWinLogic;
         private Cell[,] m_BoardCells;
 
         private InteractSystem m_InteractSystem;
@@ -24,12 +26,12 @@ namespace Gameplay
         private IInteractSystem m_CurrentInteractSystem;
         private GameplayState m_CurrentGameplayState;
 
-        public enum Player { PLAYER, ENEMY };
-        private Player m_CurrentPlayer;
+        private PlayerType m_CurrentPlayer;
 
         //For PVP
         public Triliza()
         {
+            m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[]{PlayerType.ENEMY , PlayerType.PLAYER});
             UnityEngine.Debug.Log("<color=blue>CREATE NEW GAME PVP"+ "</color>");
             m_AiLogic = null;
             SetupRestOfStuff();
@@ -38,6 +40,7 @@ namespace Gameplay
         //For VS COM
         public Triliza(IAILogic logic)
         {
+            m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[] { PlayerType.ENEMY, PlayerType.PLAYER });
             UnityEngine.Debug.Log("<color=blue>CREATE NEW GAME PVE"+ "</color>");
             m_AiLogic = logic;
             SetupRestOfStuff();
@@ -87,12 +90,12 @@ namespace Gameplay
 
         private void ChooseRandomStartingPlayer()
         {
-            m_CurrentPlayer = (Player)Random.Range(0, 2);
+            m_CurrentPlayer = (PlayerType)Random.Range(0, 2);
         }
 
         private void SetStartingGameplayState()
         {
-            if(m_CurrentPlayer == Player.ENEMY)
+            if(m_CurrentPlayer == PlayerType.ENEMY)
             {
                 if(m_AiLogic == null)
                 {
@@ -103,7 +106,7 @@ namespace Gameplay
                     SwitchToGameplayState(new AiChooseState(this));
                 }
             }
-            if(m_CurrentPlayer == Player.PLAYER)
+            if(m_CurrentPlayer == PlayerType.PLAYER)
             {
                 SwitchToGameplayState(new PlayerChooseState(this));
             }
@@ -123,19 +126,19 @@ namespace Gameplay
             int x = cellPosition.x;
             int y = cellPosition.y;
 
-            if (m_BoardCells[x, y].CellData == Cell.CellStatus.UNOCCUPIED)
+            if (m_BoardCells[x, y].CellData == CellStatus.UNOCCUPIED)
             {
-                UnityEngine.Debug.Log("<color=blue>"+m_CurrentPlayer+ "</color>");
-                if (m_CurrentPlayer == Player.PLAYER)
+                if (m_CurrentPlayer == PlayerType.PLAYER)
                 {
-                    m_BoardCells[x, y].CellData = Cell.CellStatus.PLAYER;
-                    m_BoardCells[x, y].CellSelectedByPlayer(Player.PLAYER);
+                    m_BoardCells[x, y].CellData = CellStatus.PLAYER;
+                    m_BoardCells[x, y].CellSelectedByPlayer(PlayerType.PLAYER);
                 }
                 else 
                 {
-                    m_BoardCells[x, y].CellData = Cell.CellStatus.ENEMY;
-                    m_BoardCells[x, y].CellSelectedByPlayer(Player.ENEMY);
+                    m_BoardCells[x, y].CellData = CellStatus.ENEMY;
+                    m_BoardCells[x, y].CellSelectedByPlayer(PlayerType.ENEMY);
                 }
+                bool playerWon = m_CheckWinLogic.CheckPlayerWon(m_CurrentPlayer , cellPosition);
                 GoToNextStateAfterInteract();
             }
         }
@@ -144,7 +147,7 @@ namespace Gameplay
         {
             int currentPlayer = (int)m_CurrentPlayer;
             currentPlayer++;
-            m_CurrentPlayer = (Player)((currentPlayer) % 2);
+            m_CurrentPlayer = (PlayerType)((currentPlayer) % 2);
             if(m_AiLogic == null)
             {
                 SwitchToGameplayState(new PlayerChooseState(this));

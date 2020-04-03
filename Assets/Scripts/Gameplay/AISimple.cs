@@ -19,7 +19,7 @@ namespace Gameplay.AI
             {
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i, j].CellData == Cell.CellStatus.UNOCCUPIED)
+                    if (board[i, j].CellData == CellStatus.UNOCCUPIED)
                     {
                         CellPosition currentIteratingCellPos = new CellPosition { x = i, y = j };
                         allFreeCells.Add(currentIteratingCellPos);

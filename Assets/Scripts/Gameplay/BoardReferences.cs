@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gameplay;
+using UnityEngine;
 
 public class BoardReferences : MonoBehaviour
 {
