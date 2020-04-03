@@ -41,9 +41,16 @@ namespace Gameplay
         //For VS COM
         public Triliza(IAILogic logic)
         {
-            Debug.Log(GameManager.Instance);
             m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[] { PlayerType.ENEMY, PlayerType.PLAYER });
             m_AiLogic = logic;
+            SetupRestOfStuff();
+        }
+
+        //For easy recreation
+        public Triliza(Triliza triliza)
+        {
+            m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[] { PlayerType.ENEMY, PlayerType.PLAYER });
+            m_AiLogic = triliza.m_AiLogic;
             SetupRestOfStuff();
         }
 

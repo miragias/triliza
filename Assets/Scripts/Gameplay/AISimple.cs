@@ -18,7 +18,7 @@ namespace Gameplay.AI
             return ChooseACellInRandom(GetAllFreeCells());
         }
 
-        private List<CellPosition> GetAllFreeCells()
+        public List<CellPosition> GetAllFreeCells()
         {
             List<CellPosition> allFreeCells = new List<CellPosition>();
             for (int i = 0; i < m_Board.GetLength(0); i++)

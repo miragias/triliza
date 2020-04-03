@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Core.StateMachine;
 using TMPro;
+using Gameplay;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     public TextMeshProUGUI InfoText;
     public State CurrentState;
+    public Triliza CurrentTrilizaGame;
+
     private void Awake()
     {
         mInstance = this;

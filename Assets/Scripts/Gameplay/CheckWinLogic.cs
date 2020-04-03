@@ -41,13 +41,12 @@ namespace Gameplay
 
         public bool CheckPlayerWon(PlayerType playerChecking, CellPosition cellJustChosen)
         {
-            UnityEngine.Debug.Log("<color=blue>"+cellJustChosen+ "</color>");
             //Update dictionaries
             m_Rows[cellJustChosen.x].playerTypeToHowManyValsInCollectionDictionary[playerChecking]++;
             m_Columns[cellJustChosen.y].playerTypeToHowManyValsInCollectionDictionary[playerChecking]++;
             //Diagonal dictionaries
             if ((cellJustChosen.x == 0 && cellJustChosen.y == 0) ||
-                (cellJustChosen.x == 1 && cellJustChosen.y == 1))
+                (cellJustChosen.x == 2 && cellJustChosen.y == 2))
             {
                 m_Diagonals[0].playerTypeToHowManyValsInCollectionDictionary[playerChecking]++;
             }
