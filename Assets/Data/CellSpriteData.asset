@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6ef6cec8deb43c4d8ea20cc627d5560, type: 3}
+  m_Name: CellSpriteData
+  m_EditorClassIdentifier: 
+  EnemyIconSprite: {fileID: 21300000, guid: ca12e75dfe49935469b33b65ab826921, type: 3}
+  PlayerIconSprite: {fileID: 21300000, guid: 7518270db1852af4aa3c03e775bd7052, type: 3}
