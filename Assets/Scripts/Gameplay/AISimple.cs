@@ -47,6 +47,8 @@ namespace Gameplay.AI
     {
         public RandomAiChooseLogic simpleRandomChooseLogic;
 
+        public GameType GetGameType => GameType.EASY;
+
         public CellPosition GetCellAiChoseBasedOnBoard(Cell[,] board)
         {
             simpleRandomChooseLogic = new RandomAiChooseLogic(board);

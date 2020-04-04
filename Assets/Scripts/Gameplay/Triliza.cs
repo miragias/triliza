@@ -2,7 +2,6 @@
 using Gameplay.Systems.Interact;
 using Gameplay.GameplayStates;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Gameplay
 {
@@ -12,12 +11,16 @@ namespace Gameplay
         public int y;
     }
     public enum PlayerType { PLAYER, ENEMY };
+    public enum GameType { PVP , EASY , HARD};
 
     public class Triliza
     {
         private const int NUMBER_OF_CELLS_PER_LINE = 3;
         private const int NUMBER_OF_CELLS_PER_ROW = 3;
+
         private readonly IAILogic m_AiLogic;
+        public bool IsAIGame => m_AiLogic != null;
+
         private readonly CheckWinLogic m_CheckWinLogic;
         private Cell[,] m_BoardCells;
 
@@ -28,13 +31,17 @@ namespace Gameplay
         private GameplayState m_CurrentGameplayState;
 
         private PlayerType m_CurrentPlayer;
+        private readonly GameType m_GameType;
+        public bool GameHasEnded = false;
 
         //For PVP
         public Triliza()
         {
-            Debug.Log(GameManager.Instance);
             m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[]{PlayerType.ENEMY , PlayerType.PLAYER});
             m_AiLogic = null;
+            m_GameType = GameType.PVP;
+            GameHasEnded = false;
+
             SetupRestOfStuff();
         }
 
@@ -43,6 +50,9 @@ namespace Gameplay
         {
             m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[] { PlayerType.ENEMY, PlayerType.PLAYER });
             m_AiLogic = logic;
+            m_GameType = logic.GetGameType;
+            GameHasEnded = false;
+
             SetupRestOfStuff();
         }
 
@@ -51,6 +61,9 @@ namespace Gameplay
         {
             m_CheckWinLogic = new CheckWinLogic(3, 3, 2 , new PlayerType[] { PlayerType.ENEMY, PlayerType.PLAYER });
             m_AiLogic = triliza.m_AiLogic;
+            m_GameType = triliza.m_GameType;
+            GameHasEnded = false;
+
             SetupRestOfStuff();
         }
 
@@ -62,7 +75,7 @@ namespace Gameplay
             SwitchInteractOn();
             ChooseRandomStartingPlayer();
             SetStartingGameplayState();
-            GameManager.Instance.InfoText.text = "";
+            SetupUIStuff();
         }
 
         private void CreateCellViewsArray()
@@ -126,6 +139,28 @@ namespace Gameplay
             }
         }
 
+        private void SetupUIStuff()
+        {
+            GameManager.Instance.GameMenu.SetupGameMenu(m_GameType);
+
+            GameManager.Instance.GameMenu.InfoText.text = "";
+            if(IsAIGame)
+            {
+                GameManager.Instance.GameMenu.PvPText.text = "";
+            }
+            else
+            {
+                SetCurrentPlayerUIText();
+            }
+        }
+
+        private void SetCurrentPlayerUIText()
+        {
+            if (IsAIGame) return;
+            string playerChoosingString = m_CurrentPlayer == PlayerType.PLAYER ? "X" : "O";
+            GameManager.Instance.GameMenu.PvPText.text = "Currently choosing :" + playerChoosingString;
+        }
+
         public void SwitchInteractOn()
         {
             m_CurrentInteractSystem = m_InteractSystem;
@@ -152,15 +187,18 @@ namespace Gameplay
                     m_BoardCells[x, y].CellData = CellStatus.ENEMY;
                     m_BoardCells[x, y].CellSelectedByPlayer(PlayerType.ENEMY);
                 }
+
                 bool playerWon = m_CheckWinLogic.CheckPlayerWon(m_CurrentPlayer , cellPosition);
                 if(playerWon)
                 {
                     SwitchToGameplayState(new FinishedGameStateWithWinner(m_AiLogic == null, m_CurrentPlayer , this));
+                    GameHasEnded = true;
                     return;
                 }
                 bool checkTie = CheckTie();
                 if (checkTie)
                 {
+                    GameHasEnded = true;
                     SwitchToGameplayState(new FinishedGameStateWithTie(this));
                     return;
                 }
@@ -191,6 +229,7 @@ namespace Gameplay
             int currentPlayer = (int)m_CurrentPlayer;
             currentPlayer++;
             m_CurrentPlayer = (PlayerType)((currentPlayer) % 2);
+            SetCurrentPlayerUIText();
         }
 
         private void GoToNextStateAfterInteract()

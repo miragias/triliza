@@ -6,6 +6,8 @@ namespace Gameplay.AI
     [CreateAssetMenu(fileName = "HardAI", menuName = "AI/Hard", order = 0)]
     public class AIAdvanced : ScriptableObject, IAILogic
     {
+        public GameType GetGameType => GameType.HARD;
+
         public CellPosition GetCellAiChoseBasedOnBoard(Cell[,] board)
         {
             bool pickRandom = Random.Range(0, 3) == 0;

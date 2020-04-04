@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Gameplay.Systems.Interact;
-using Gameplay;
 
 public enum CellStatus { UNOCCUPIED, PLAYER, ENEMY };
 namespace Gameplay

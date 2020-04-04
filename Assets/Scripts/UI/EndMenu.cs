@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using Gameplay;
 using Core.StateMachine;
-using Gameplay.AI;
+using TMPro;
 
 namespace UI.Menus
 {
@@ -10,6 +10,13 @@ namespace UI.Menus
     {
         public Button RestartButton;
         public Button BackToMenuButton;
+        public TextMeshProUGUI InfoText;
+
+        [Header("VsBarStuff")] 
+        [SerializeField] private Image m_EnemyImage;
+        public TextMeshProUGUI PvPText;
+
+        [SerializeField] private EnemyIconData m_EnemyIconData;
 
         private void Awake()
         {
@@ -19,13 +26,18 @@ namespace UI.Menus
 
         private void RecreateGame()
         {
-            GameManager.Instance.InfoText.text = "";
+            InfoText.text = "";
             GameManager.Instance.SwitchToState(new InGameState(new Triliza(GameManager.Instance.CurrentTrilizaGame)));
         }
 
         private void LeaveGame()
         {
             GameManager.Instance.SwitchToState(new MenuState());
+        }
+
+        public void SetupGameMenu(GameType gameType)
+        {
+            m_EnemyImage.sprite = m_EnemyIconData.GetSpriteBasedOnGameType(gameType);
         }
     }
 }

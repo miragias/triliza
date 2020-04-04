@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using Core.StateMachine;
-using TMPro;
 using Gameplay;
 using UI.Menus;
 
@@ -17,13 +16,16 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public TextMeshProUGUI InfoText;
-    public State CurrentState;
+    //NOTE(JohnMir): Keeping these here just for easy singleton access and cause it's a simple game.
     public Triliza CurrentTrilizaGame;
     public GameObject Board;
+    //
 
+    public State CurrentState; //GameState
+
+    //Menus
     public MainMenu MainMenu;
-    public EndMenu EndMenu;
+    public EndMenu GameMenu;
 
 
     private void Awake()
@@ -35,6 +37,10 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         CurrentState.Tick();
+    }
+
+    public void SetupGameMenu()
+    {
     }
 
     public void SwitchToState(State state)

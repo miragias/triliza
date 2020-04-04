@@ -14,12 +14,12 @@ namespace Core.StateMachine
         public override void OnEnterState()
         {
             GameManager.Instance.Board.gameObject.SetActive(true);
-            GameManager.Instance.EndMenu.gameObject.SetActive(true);
+            GameManager.Instance.GameMenu.gameObject.SetActive(true);
         }
 
         public override void OnLeaveState()
         {
-            GameManager.Instance.EndMenu.gameObject.SetActive(false);
+            GameManager.Instance.GameMenu.gameObject.SetActive(false);
             GameManager.Instance.Board.gameObject.SetActive(false);
         }
 

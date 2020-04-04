@@ -13,11 +13,15 @@
         public override void OnEnterState()
         {
             m_Triliza.PickAiMove();
-            m_Triliza.SwitchToGameplayState(new PlayerChooseState(m_Triliza));
+            if(!m_Triliza.GameHasEnded)
+            {
+                m_Triliza.SwitchToGameplayState(new PlayerChooseState(m_Triliza));
+            }
         }
 
         public override void OnLeaveState()
         {
+            m_Triliza.SwitchInteractOff();
         }
 
         public override void Update()

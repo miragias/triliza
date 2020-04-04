@@ -11,7 +11,7 @@
         public override void OnEnterState()
         {
             m_Triliza.SwitchInteractOff();
-            GameManager.Instance.InfoText.text = "TIE";
+            GameManager.Instance.GameMenu.InfoText.text = "TIE";
         }
 
         public override void OnLeaveState()

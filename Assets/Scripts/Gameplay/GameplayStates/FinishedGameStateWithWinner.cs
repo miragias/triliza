@@ -20,22 +20,22 @@
             {
                 if (m_PlayerWon == PlayerType.PLAYER)
                 {
-                    GameManager.Instance.InfoText.text = "Player 1 WINS";
+                    GameManager.Instance.GameMenu.InfoText.text = "Player 1 WINS";
                 }
                 else
                 {
-                    GameManager.Instance.InfoText.text = "Player 2 WINS";
+                    GameManager.Instance.GameMenu.InfoText.text = "Player 2 WINS";
                 }
             }
             else
             {
                 if (m_PlayerWon == PlayerType.PLAYER)
                 {
-                    GameManager.Instance.InfoText.text = "Player WINS";
+                    GameManager.Instance.GameMenu.InfoText.text = "Player WINS";
                 }
                 else
                 {
-                    GameManager.Instance.InfoText.text = "COM WINS";
+                    GameManager.Instance.GameMenu.InfoText.text = "COM WINS";
                 }
             }
         }
