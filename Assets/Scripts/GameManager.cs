@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     //NOTE(JohnMir): Keeping these here just for easy singleton access and cause it's a simple game.
     public Triliza CurrentTrilizaGame;
-    public GameObject Board;
+    public BoardReferences BoardReferences;
     //
 
     public State CurrentState; //GameState

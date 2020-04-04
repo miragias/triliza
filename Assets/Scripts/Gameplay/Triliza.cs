@@ -80,7 +80,7 @@ namespace Gameplay
 
         private void CreateCellViewsArray()
         {
-            Cell[] allCellViews = GameManager.Instance.Board.GetComponent<BoardReferences>().CellViewsOnBoard;
+            Cell[] allCellViews = GameManager.Instance.BoardReferences.GetComponent<BoardReferences>().CellViewsOnBoard;
 
             //NOTE(JohnMir): Convert 1D to 2D array for easier access 
             m_BoardCells = new Cell[NUMBER_OF_CELLS_PER_LINE, NUMBER_OF_CELLS_PER_ROW];
@@ -142,6 +142,7 @@ namespace Gameplay
         private void SetupUIStuff()
         {
             GameManager.Instance.GameMenu.SetupGameMenu(m_GameType);
+            GameManager.Instance.BoardReferences.DisableAllImages();
 
             GameManager.Instance.GameMenu.InfoText.text = "";
             if(IsAIGame)

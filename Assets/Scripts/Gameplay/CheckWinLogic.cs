@@ -15,9 +15,12 @@ namespace Gameplay
         private readonly CellArrayData[] m_Rows;
         private readonly CellArrayData[] m_Columns;
         private readonly CellArrayData[] m_Diagonals;
+        private readonly BoardReferences m_BoardReferences;
 
         public CheckWinLogic(int rowNumber , int columnNumber , int diagonalNumber , PlayerType[] playerTypes)
         {
+            m_BoardReferences = GameManager.Instance.BoardReferences;
+
             m_Rows = new CellArrayData[rowNumber];
             PopulateCellArrayData(m_Rows, playerTypes);
             m_Columns = new CellArrayData[columnNumber];
@@ -66,6 +69,7 @@ namespace Gameplay
             {
                 if(m_Rows[i].playerTypeToHowManyValsInCollectionDictionary[playerChecking] == 3)
                 {
+                    m_BoardReferences.RowImages[i].enabled = true;
                     return true;
                 }
             }
@@ -73,6 +77,7 @@ namespace Gameplay
             {
                 if(m_Columns[i].playerTypeToHowManyValsInCollectionDictionary[playerChecking] == 3)
                 {
+                    m_BoardReferences.ColumnImages[i].enabled = true;
                     return true;
                 }
             }
@@ -80,6 +85,7 @@ namespace Gameplay
             {
                 if(m_Diagonals[i].playerTypeToHowManyValsInCollectionDictionary[playerChecking] == 3)
                 {
+                    m_BoardReferences.DiagonalImages[i].enabled = true;
                     return true;
                 }
             }
