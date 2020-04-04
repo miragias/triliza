@@ -20,26 +20,26 @@ namespace UI.Menus
         private void CreatePlayerVsPlayerGame()
         {
             GameManager.Instance.SwitchToState(new InGameState(TrilizaFactory.CreatePlayerVsPlayerGame()));
-            DisableUIButtons();
+            SetStateOfUIButtons(false);
         }
 
         private void CreatePlayerVsEasyGame()
         {
             GameManager.Instance.SwitchToState(new InGameState(TrilizaFactory.CreatePlayerVsEasyGame()));
-            DisableUIButtons();
+            SetStateOfUIButtons(false);
         }
 
         private void CreatePlayerVsHardGame()
         {
             GameManager.Instance.SwitchToState(new InGameState(TrilizaFactory.CreatePlayerVsHardGame()));
-            DisableUIButtons();
+            SetStateOfUIButtons(false);
         }
 
-        private void DisableUIButtons()
+        public void SetStateOfUIButtons(bool state)
         {
-            VsPlayerButton.interactable = false;
-            VsEasyButton.interactable = false;
-            VsHardButton.interactable = false;
+            VsPlayerButton.interactable = state;
+            VsEasyButton.interactable = state;
+            VsHardButton.interactable = state;
         }
     }
 }

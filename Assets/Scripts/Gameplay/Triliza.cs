@@ -62,11 +62,12 @@ namespace Gameplay
             SwitchInteractOn();
             ChooseRandomStartingPlayer();
             SetStartingGameplayState();
+            GameManager.Instance.InfoText.text = "";
         }
 
         private void CreateCellViewsArray()
         {
-            Cell[] allCellViews = UnityEngine.Object.FindObjectOfType<BoardReferences>().CellViewsOnBoard;
+            Cell[] allCellViews = GameManager.Instance.Board.GetComponent<BoardReferences>().CellViewsOnBoard;
 
             //NOTE(JohnMir): Convert 1D to 2D array for easier access 
             m_BoardCells = new Cell[NUMBER_OF_CELLS_PER_LINE, NUMBER_OF_CELLS_PER_ROW];

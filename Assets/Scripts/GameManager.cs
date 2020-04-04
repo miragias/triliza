@@ -2,6 +2,7 @@
 using Core.StateMachine;
 using TMPro;
 using Gameplay;
+using UI.Menus;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI InfoText;
     public State CurrentState;
     public Triliza CurrentTrilizaGame;
+    public GameObject Board;
+
+    public MainMenu MainMenu;
+    public EndMenu EndMenu;
+
 
     private void Awake()
     {

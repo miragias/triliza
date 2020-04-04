@@ -4,11 +4,12 @@ namespace Core.StateMachine
     {
         public override void OnEnterState()
         {
-            //TODO(JohnMir): Show menu UI
+            GameManager.Instance.MainMenu.gameObject.SetActive(true);
+            GameManager.Instance.MainMenu.SetStateOfUIButtons(true);
         }
         public override void OnLeaveState()
         {
-            //TODO(JohnMir): Hide menu
+            GameManager.Instance.MainMenu.gameObject.SetActive(false);
         }
 
         public override void Tick()
